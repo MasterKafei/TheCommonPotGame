@@ -11,6 +11,7 @@ AppBundle\Entity\Player:
     oneToOne:
         vote:
             targetEntity: AppBundle\Entity\Vote
+            cascade: [remove]
     manyToOne:
         user:
             targetEntity: AppBundle\Entity\User

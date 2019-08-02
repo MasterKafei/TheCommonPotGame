@@ -16,7 +16,7 @@ class TransactionBusiness
                 $totalTaxes = 0;
                 foreach ($round->getTransactions() as $transaction) {
                     if ($transaction->getPlayer() === $player) {
-                        $money += $transaction->getPiggyBank();
+                        $money += $game->getRoundMoney() - $transaction->getTaxes();
                     }
                     $totalTaxes += $transaction->getTaxes();
                 }

@@ -1,0 +1,45 @@
+{{ form_start(form) }}
+<div class="card mt-3 bg-info">
+    <div class="card-header text-center bg-light">
+        Tour {{ current_round_number }}
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-6">
+                    Taxes:
+                </div>
+                <div class="col-6" id="taxes">
+                    0€
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-6">
+                    Compte:
+                </div>
+                <div class="col-6" id="piggy-bank">
+                    {{ game.roundMoney }}€
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-12">
+                    {{ form_widget(form.taxes, {'attr': {'class': 'custom-range'}}) }}
+                </div>
+            </div>
+        </li>
+    </ul>
+    <input class="card-footer btn btn-primary bg-primary text-white" type="submit">
+</div>
+{{ form_end(form) }}
+<script>
+    var max = {{ game.roundMoney }};
+    $('input[type=range]').on('input', function (event) {
+        var taxes = event.target.value;
+        $('#taxes').html(taxes + '€');
+        $('#piggy-bank').html((max - taxes) + '€');
+    });
+</script>

@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class GameController extends Controller
 {
     /**
-     * @Route(path="/game/create", name="app_game_create")
+     * @Route(path="/game/create", name="app_game_create", methods={"POST"})
      *
      * @param Request $request
      * @param RoundBusiness $roundBusiness
@@ -40,14 +40,12 @@ class GameController extends Controller
             $em->persist($game);
             $em->persist($round);
             $em->flush();
-
-            return $this->redirectToRoute('app_game_join', array(
-                'name' => $game->getName(),
-            ));
+        } else {
+            return $this->redirectToRoute('app_game_list');
         }
 
-        return $this->render('@Page/Game/create.html.twig', array(
-            'form' => $form->createView(),
+        return $this->redirectToRoute('app_game_join', array(
+            'name' => $game->getName(),
         ));
     }
 
@@ -94,6 +92,13 @@ class GameController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        foreach ($game->getPlayers() as $player) {
+            $em->remove($player);
+        }
+        foreach ($game->getRounds() as $round) {
+            $em->remove($round);
+        }
+        $em->flush();
         $em->remove($game);
         $em->flush();
 
@@ -124,9 +129,18 @@ class GameController extends Controller
     public function listAction()
     {
         $games = $this->getDoctrine()->getManager()->getRepository(Game::class)->findAll();
+        $game = new Game();
+        $game
+            ->setRoundMoney(5)
+            ->setRoundNumber(5)
+            ->setMaxPlayerNumber(5)
+        ;
 
         return $this->render('@Page/Game/list.html.twig', array(
             'games' => $games,
+            'form' => $this->createForm(CreateGameType::class, $game, array(
+                'action' => $this->generateUrl('app_game_create')
+            ))->createView()
         ));
     }
 
@@ -139,7 +153,7 @@ class GameController extends Controller
      */
     public function joinAction(Game $game, GameBusiness $gameBusiness)
     {
-        if (!$gameBusiness->isUserInGame($game, $this->getUser()) && !$game->getFinished() && count($game->getRounds()) < 2) {
+        if (!$gameBusiness->isUserInGame($game, $this->getUser()) && !$game->getFinished() && count($game->getRounds()) < 2 /*&& ($game->getMaxPlayerNumber() == null || $game->getMaxPlayerNumber() < count($game->getPlayers()))*/) {
             $player = new Player();
             $player
                 ->setUser($this->getUser())
@@ -222,16 +236,15 @@ class GameController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $total = $transaction->getPiggyBank() + $transaction->getTaxes();
-
             $round = $roundBusiness->getCurrentRound($game);
             $player = $gameBusiness->getPlayer($game, $this->getUser());
 
-            if ($total !== $game->getRoundMoney() || $game->getEliminatedPlayer() === $player || $roundBusiness->doesPlayerAlreadyPaid($round, $player) || $game->getFinished() || !$game->getPlayers()->contains($player)) {
+            if ($transaction->getTaxes() > $game->getRoundMoney() || $game->getEliminatedPlayer() === $player || $roundBusiness->doesPlayerAlreadyPaid($round, $player) || $game->getFinished() || !$game->getPlayers()->contains($player)) {
                 return $this->redirectToRoute('app_game_show', array(
                     'name' => $game->getName(),
                 ));
             }
+
             $transaction->setRound($round);
             $transaction->setPlayer($player);
             $round->addTransaction($transaction);
@@ -239,7 +252,7 @@ class GameController extends Controller
 
             if (count($round->getTransactions()) == count($game->getPlayers())) {
                 $newRound = $roundBusiness->createNewRound($game);
-                if(null !== $newRound) {
+                if (null !== $newRound) {
                     $em->persist($newRound);
                 } else {
                     $game->setFinished(true);

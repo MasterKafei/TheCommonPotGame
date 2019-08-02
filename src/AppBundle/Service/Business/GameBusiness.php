@@ -20,8 +20,12 @@ class GameBusiness
         $this->registry = $registry;
     }
 
-    public function isUserInGame(Game $game, User $user)
+    public function isUserInGame(Game $game, User $user = null)
     {
+        if(null === $user) {
+            return false;
+        }
+
         return null !== $this->getPlayer($game, $user);
     }
 
@@ -62,7 +66,7 @@ class GameBusiness
         return $this->registry->getRepository(Player::class)->find(rand(0, count($maxIdPlayers) - 1));
     }
 
-    public function isUserAllowToDeleteGame(Game $game, User $user)
+    public function isUserAllowToDeleteGame(Game $game, User $user = null)
     {
         return $game->getOwner() === $user;
     }

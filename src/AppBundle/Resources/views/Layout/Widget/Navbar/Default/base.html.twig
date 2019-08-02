@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {{ app.request.attributes.get('_route') == 'app_game_list' ? 'active' }}">
+                <a class="nav-link" href="{{ path('app_game_list') }}">Parties</a>
+            </li>
+        </ul>
+    </div>
+    <div class="mx-auto order-0">
+        <a class="navbar-brand mx-auto" href="{{ path('app_home_index') }}">Le Bien Commun</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            {% if app.user is not null %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_user_logout') }}">Déconnexion</a>
+                </li>
+            {% else %}
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_user_login' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('app_user_login') }}">Connexion</a>
+                </li>
+                <li class="nav-item {{ app.request.attributes.get('_route') == 'app_user_register' ? 'active' }}">
+                    <a class="nav-link" href="{{ path('app_user_register') }}">Inscription</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

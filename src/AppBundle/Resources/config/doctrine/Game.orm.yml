@@ -15,25 +15,29 @@ AppBundle\Entity\Game:
             unique: true
         roundNumber:
             type: integer
-            length: 3
         roundMoney:
             type: integer
-            length: 2
         finished:
             type: boolean
             nullable: false
+        maxPlayerNumber:
+            type: integer
+            nullable: true
     oneToMany:
         players:
             targetEntity: AppBundle\Entity\Player
             mappedBy: game
+            cascade: [persist, remove]
             joinTable:
                 name: game_players
         rounds:
             targetEntity: AppBundle\Entity\Round
             mappedBy: game
+            cascade: [persist, remove]
     oneToOne:
         eliminatedPlayer:
             targetEntity: AppBundle\Entity\Player
+            cascade: [persist, remove]
     manyToOne:
         owner:
             targetEntity: AppBundle\Entity\User

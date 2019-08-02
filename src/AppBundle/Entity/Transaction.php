@@ -15,12 +15,7 @@ class Transaction
     /**
      * @var int
      */
-    private $taxes;
-
-    /**
-     * @var int
-     */
-    private $piggyBank;
+    private $taxes = 0;
 
     /**
      * @var Player
@@ -65,30 +60,6 @@ class Transaction
     public function getTaxes()
     {
         return $this->taxes;
-    }
-
-    /**
-     * Set piggyBank.
-     *
-     * @param int $piggyBank
-     *
-     * @return Transaction
-     */
-    public function setPiggyBank($piggyBank)
-    {
-        $this->piggyBank = $piggyBank;
-
-        return $this;
-    }
-
-    /**
-     * Get piggyBank.
-     *
-     * @return int
-     */
-    public function getPiggyBank()
-    {
-        return $this->piggyBank;
     }
 
     /**

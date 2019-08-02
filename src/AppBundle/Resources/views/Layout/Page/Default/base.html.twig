@@ -4,13 +4,17 @@
 <head>
     <title>{% block title %}{% endblock title %}</title>
     {% include '@Layout/Page/Default/stylesheets.html.twig' %}
+    {% include '@Layout/Page/Default/javascripts.html.twig' %}
     {% block stylesheets %}{% endblock stylesheets %}
 </head>
 <body>
-{% include '@Layout/Navbar/Default/base.html.twig' %}
+{% include '@Layout/Widget/Navbar/Default/base.html.twig' %}
 <div class="container-fluid">
-    {% block body %}
-    {% endblock body %}
+    <div class="row">
+        <main class="col-12 py-md-5 pl-md-5 pr-md-5 bd-content" role="main">
+            {% block body %}{% endblock body %}
+        </main>
+    </div>
 </div>
 {% block scripts %}{% endblock scripts %}
 </body>

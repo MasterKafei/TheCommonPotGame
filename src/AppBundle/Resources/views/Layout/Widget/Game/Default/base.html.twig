@@ -1,0 +1,54 @@
+<div class="card bg-info">
+    <div class="card-header text-center bg-light">
+        {{ game.name }}
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-6 text-left">
+                    Propriétaire:
+                </div>
+                <div class="col-6 text-left">
+                    {{ game.owner.username }}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-6 text-left">Tour:</div>
+                <div class="col-6 text-left">{{ game.rounds|length }}/{{ game.roundNumber }}</div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-6 text-left">
+                    Joueurs:
+                </div>
+                <div class="col-6 text-left">
+                    {{ game.players|length }}{% if game.maxPlayerNumber is not null %}/{{ game.maxPlayerNumber }}{% endif %}
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-6 text-left">
+                    Argent par tour:
+                </div>
+                <div class="col-6 text-left">
+                    {{ game.roundMoney }}€
+                </div>
+            </div>
+        </li>
+        {% if game_business.userInGame(game, app.user) or game.rounds|length > 2 %}
+            <a href="{{ path('app_game_show', {'name': game.name}) }}" class="list-group-item btn btn-primary bg-primary">Afficher</a>
+        {% else %}
+            <a href="{{ path('app_game_join', {'name': game.name}) }}" class="list-group-item btn btn-success bg-success">Rejoindre</a>
+        {% endif %}
+        {% if game_business.userAllowToDeleteGame(game, app.user) %}
+            <a href="{{ path('app_game_delete', {'name': game.name}) }}" class="list-group-item btn btn-danger bg-danger">Supprimer</a>
+        {% endif %}
+    </ul>
+    <div class="card-footer text-muted text-center bg-light">
+        {% if game.finished %}Terminé{% elseif game.rounds|length > 2 %}En cours{% else %}En préparation{% endif %}
+    </div>
+</div>

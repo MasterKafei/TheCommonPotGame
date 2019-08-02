@@ -15,6 +15,6 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('@Page/Home/index.html.twig');
+        return $this->redirectToRoute('app_game_list');
     }
 }

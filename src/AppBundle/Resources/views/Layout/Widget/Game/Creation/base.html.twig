@@ -1,0 +1,34 @@
+{{ form_start(form) }}
+<div class="card">
+    <div class="card-header">
+        Créer une nouvelle partie
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-6 col-lg-4 col-form-label">{{ form_label(form.name) }}</label>
+            <div class="col-sm-6 col-lg-8">
+                {{ form_widget(form.name) }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-6 col-lg-4 col-form-label">{{ form_label(form.roundMoney) }}</label>
+            <div class="col-sm-6 col-lg-8">
+                {{ form_widget(form.roundMoney) }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-6 col-lg-4 col-form-label">{{ form_label(form.roundNumber) }}</label>
+            <div class="col-sm-6 col-lg-8">
+                {{ form_widget(form.roundNumber) }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-6 col-lg-4 col-form-label">{{ form_label(form.maxPlayerNumber) }}</label>
+            <div class="col-sm-6 col-lg-8">
+                {{ form_widget(form.maxPlayerNumber) }}
+            </div>
+        </div>
+    </div>
+    <input class="card-footer btn btn-primary bg-primary text-white" type="submit">
+</div>
+{{ form_end(form) }}

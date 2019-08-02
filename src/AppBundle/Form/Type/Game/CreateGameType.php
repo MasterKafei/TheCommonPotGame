@@ -14,9 +14,19 @@ class CreateGameType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, array())
-            ->add('roundMoney', IntegerType::class, array())
-            ->add('roundNumber', IntegerType::class, array())
+            ->add('name', TextType::class, array(
+                'label' => 'Nom de la partie',
+            ))
+            ->add('roundMoney', IntegerType::class, array(
+                'label' => 'Quantité d\'argent par tour'
+            ))
+            ->add('roundNumber', IntegerType::class, array(
+                'label' => 'Nombre de tour'
+            ))
+            ->add('maxPlayerNumber', IntegerType::class, array(
+                'label' => 'Nombre maximum de joueur',
+                'required' => false,
+            ))
         ;
     }
 

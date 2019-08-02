@@ -28,14 +28,10 @@ class LoginUserType extends AbstractType
     {
         $builder
             ->add('_username', TextType::class, array(
-                'attr' => array(
-                    'placeholder' => 'Pseudonyme',
-                )
+                'label' => 'Nom d\'utilisateur'
             ))
             ->add('_password', PasswordType::class, array(
-                'attr' => array(
-                    'placeholder' => 'Mot de passe',
-                )
+                'label' => 'Mot de passe',
             ))
             ->add('_remember_me', CheckboxType::class, array(
                 'required' => false,

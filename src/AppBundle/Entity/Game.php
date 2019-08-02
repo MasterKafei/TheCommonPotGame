@@ -53,6 +53,11 @@ class Game
     private $roundMoney = 5;
 
     /**
+     * @var int|null
+     */
+    private $maxPlayerNumber;
+
+    /**
      * @var bool
      */
     private $finished = false;
@@ -308,9 +313,38 @@ class Game
         return $this;
     }
 
+    /**
+     * Add round.
+     *
+     * @param Round $round
+     * @return $this
+     */
     public function addRound(Round $round)
     {
         $this->rounds[] = $round;
+
+        return $this;
+    }
+
+    /**
+     * Get max player number.
+     *
+     * @return int|null
+     */
+    public function getMaxPlayerNumber()
+    {
+        return $this->maxPlayerNumber;
+    }
+
+    /**
+     * Set max player number.
+     *
+     * @param int|null $maxPlayerNumber
+     * @return Game
+     */
+    public function setMaxPlayerNumber($maxPlayerNumber)
+    {
+        $this->maxPlayerNumber = $maxPlayerNumber;
 
         return $this;
     }

@@ -1,32 +1,59 @@
 {% extends '@Layout/Page/Default/base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path('app_game_create') }}">Créer une partie</a>
-    <table class="table table-striped table-dark">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for game in games %}
-        <tr>
-            <th scope="row">{{ loop.index }}</th>
-            <td>{{ game.name }}</td>
-            <td>
-                {% if game_bussiness.userInGame(game, app.user) or game.rounds|length > 2 %}
-                    <a href="{{ path('app_game_show', {'name': game.name}) }}" class="btn btn-primary">Afficher</a>
-                {% else %}
-                    <a href="{{ path('app_game_join', {'name': game.name}) }}" class="btn btn-success">Rejoindre</a>
-                {% endif %}
-                {% if game_bussiness.isUserAllowToDeleteGame(game, app.user) %}
-                    <a href="{{ path('app_game_delete', {'name': game.name}) }}" class="btn btn-danger">Supprimer</a>
-                {% endif %}
-            </td>
-        </tr>
+    {% if app.user is not null %}
+        <div class="row">
+            <div class="col-12">
+                {% include '@Layout/Widget/Game/Creation/base.html.twig' with {'form': form} %}
+            </div>
+        </div>
+    {% endif %}
+    {% set has_not_started_games = false %}
+    {% set not_started_games %}
+        {% for game in games if not game.finished and game.rounds|length < 2 %}
+            {% set has_not_started_games = true %}
+            <div class="col-4 mt-4">
+                {% include '@Layout/Widget/Game/Default/base.html.twig' with {'game': game} %}
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    {% endset %}
+
+
+    {% if has_not_started_games %}
+        <div class="row">
+            {{ not_started_games }}
+        </div>
+    {% endif %}
+
+    {% set has_started_games = false %}
+    {% set started_games %}
+        {% for game in games if not game.finished and game.rounds|length > 2 %}
+            {% set started_games = true %}
+            <div class="col-3">
+                {% include '@Layout/Widget/Game/Default/base.html.twig' with {'game': game} %}
+            </div>
+        {% endfor %}
+    {% endset %}
+
+    {% if has_started_games %}
+        <div class="row mt-4">
+            {{ started_games }}
+        </div>
+    {% endif %}
+
+    {% set has_finished_games = false %}
+    {% set finished_games %}
+        {% for game in games if game.finished %}
+            {% set has_finished_games = true %}
+            <div class="col-3">
+                {% include '@Layout/Widget/Game/Default/base.html.twig' with {'game': game} %}
+            </div>
+        {% endfor %}
+    {% endset %}
+
+    {% if has_finished_games %}
+        <div class="row mt-4">
+            {{ finished_games }}
+        </div>
+    {% endif %}
 {% endblock body %}

@@ -6,80 +6,134 @@
     {% else %}
         {% set players = game.players %}
     {% endif %}
-    Votre compte personnel: {{ transaction_bussiness.playerMoney(player) }}€<br/>
-    Tour: {{ round_bussiness.currentRound(game).number }}/{{ game.roundNumber }}
-    {% set previous_round = round_bussiness.previousRound(game) %}<br/>
-    Taxes tour précédent: {{ previous_round ? round_bussiness.roundTaxes(previous_round) ~ '€' : '-' }}
-    <table class="table table-striped table-dark">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Joueur</th>
-            <th scope="col">Status</th>
-            {% if game.finished %}
-                <th scope="col">Solde</th>
-            {% endif %}
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for current_player in players %}
-            <tr>
-                <th scope="row">{{ loop.index }}</th>
-                <td>{{ current_player.user.username }}</td>
-                <td>
-                    {{ game.eliminatedPlayer == current_player ? 'Eliminé' : 'En jeu' }}
-                </td>
-                {% if game.finished %}
-                    <td>
-                        {{ transaction_bussiness.playerMoney(current_player) }}€
-                    </td>
-                {% endif %}
-                <td>
-                    {% if current_player.user != app.user and player.vote == null and not game.finished %}
-                        <a href="{{ path('app_game_vote', {'name': game.name, 'id': current_player.id}) }}"
-                           class="btn btn-primary">
-                            Voter contre ce joueur
-                        </a>
-                    {% elseif player.vote is not null and player.vote.target == current_player %}
-                        Vous avez voté contre ce joueur
-                    {% endif %}
-                </td>
 
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% if player != game.eliminatedPlayer and not game.finished %}
-        Tour suivant:
-        {{ form_start(form) }}
-        {{ form_rest(form) }}
-        <input type="submit" class="btn btn-primary" value="Payer">
-        {{ form_end(form) }}
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-info">
+                <div class="card-header text-center bg-light">
+                    Informations
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">
+                                Votre compte personnel:
+                            </div>
+                            <div class="col-6">
+                                {{ transaction_business.playerMoney(player) }}€
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">
+                                {% set previous_round = round_business.previousRound(game) %}
+                                Taxes tour précédent:
+                            </div>
+                            <div class="col-6">
+                                {{ previous_round ? round_business.roundTaxes(previous_round) ~ '€' : '-' }}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="card-footer bg-light">
+                    <div class="col-12">
+                        {% set value = round_business.currentRound(game).number/game.roundNumber * 100 %}
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar" aria-valuenow="{{ value }}" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: {{ value }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% set current_round = round_business.currentRound(game) %}
+    {% if player != game.eliminatedPlayer and not game.finished and not round_business.doesPlayerAlreadyPaid(current_round, player) %}
+        <div class="row">
+            <div class="col-12">
+                {% include '@Layout/Widget/Transaction/Creation/base.html.twig' with {'form': form, 'current_round_number': current_round.number, 'game': game} %}
+            </div>
+        </div>
     {% endif %}
+    <div class="row">
+        {% for current_player in players %}
+            <div class="col-4">
+                <div class="card mt-3 bg-info">
+                    <div class="card-header text-center bg-light">
+                        {{ current_player.user.username }}
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-6">
+                                    Status:
+                                </div>
+                                <div class="col-6">
+                                    {{ game.eliminatedPlayer == current_player ? 'Eliminé' : 'En jeu' }}
+                                </div>
+                            </div>
+                        </li>
+                        {% if game.finished %}
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-6">
+                                        Compte:
+                                    </div>
+                                    <div class="col-6">
+                                        {{ transaction_business.playerMoney(current_player) }}€
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-6">
+                                        Vote:
+                                    </div>
+                                    <div class="col-6">
+                                        {{ current_player.vote ? current_player.vote.target.user.username : 'Aucun vote' }}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                    {% if player is not null and not game.finished %}
+                        {% if current_player == player or player.vote != null %}
+                            <div class="card-footer bg-light text-center">
+                                {{ current_player == player ? 'Vous ne pouvez pas voter contre vous' : 'Vous avez déjà voter' }}
+                            </div>
+                        {% else %}
+                            <a href="{{ path('app_game_vote', {'name': game.name, 'id': current_player.id}) }}"
+                               class="card-footer list-group-item btn btn-danger bg-danger">
+                                Voter contre ce joueur
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     {% if game.finished %}
-        Historique:
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Tour</th>
-                <th>Joueur</th>
-                <th>Tirelire</th>
-                <th>Taxes</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for round in game.rounds %}
+        {% for round in game.rounds|sort('number') %}
+            <div class="card bg-info mt-3">
+                <div class="card-header bg-light text-center">
+                    Tour {{ round.number }}
+                </div>
                 {% for transaction in round.transactions %}
-                    <tr>
-                        <td>{{ round.number }}</td>
-                        <td>{{ transaction.player.user.username }}</td>
-                        <td>{{ transaction.piggyBank }}</td>
-                        <td>{{ transaction.taxes }}</td>
-                    </tr>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6">
+                                {{ transaction.player.user.username }}
+                            </div>
+                            <div class="col-6">
+                                {{ transaction.taxes }}€
+                            </div>
+                        </div>
+                    </li>
                 {% endfor %}
-            {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        {% endfor %}
     {% endif %}
 {% endblock body %}

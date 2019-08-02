@@ -11,8 +11,6 @@ AppBundle\Entity\Transaction:
     fields:
         taxes:
             type: integer
-        piggyBank:
-            type: integer
     manyToOne:
         round:
             targetEntity: AppBundle\Entity\Round
