@@ -24,10 +24,7 @@ class UserController extends Controller
     public function loginAction(AuthenticationUtils $utils, Request $request)
     {
         $form = $this->createForm(LoginUserType::class);
-        $error = $utils->getLastAuthenticationError();
-        if ($error !== null) {
-            echo $error->getMessage();
-        }
+        
         $lastUsername = $utils->getLastUsername();
         $form->get('_username')->setData($lastUsername);
         $form->get('_csrf_token')->setData(
