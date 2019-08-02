@@ -1,0 +1,6 @@
+services:
+    app.listener.game:
+        class: AppBundle\Service\Listener\GameListener
+        tags:
+        - { name: doctrine.orm.entity_listener, entity: AppBundle\Entity\Game, event: prePersist }
+        - { name: doctrine.orm.entity_listener, entity: AppBundle\Entity\Game, event: preUpdate}

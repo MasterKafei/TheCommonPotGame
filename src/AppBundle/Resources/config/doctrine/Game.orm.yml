@@ -1,0 +1,41 @@
+AppBundle\Entity\Game:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\GameRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 255
+            unique: true
+        roundNumber:
+            type: integer
+            length: 3
+        roundMoney:
+            type: integer
+            length: 2
+        finished:
+            type: boolean
+            nullable: false
+    oneToMany:
+        players:
+            targetEntity: AppBundle\Entity\Player
+            mappedBy: game
+            joinTable:
+                name: game_players
+        rounds:
+            targetEntity: AppBundle\Entity\Round
+            mappedBy: game
+    oneToOne:
+        eliminatedPlayer:
+            targetEntity: AppBundle\Entity\Player
+    manyToOne:
+        owner:
+            targetEntity: AppBundle\Entity\User
+            nullable: false
+    lifecycleCallbacks: {  }

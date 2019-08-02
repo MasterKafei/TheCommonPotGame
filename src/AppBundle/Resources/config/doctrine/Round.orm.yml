@@ -1,0 +1,22 @@
+AppBundle\Entity\Round:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\RoundRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        number:
+            type: integer
+    manyToOne:
+        game:
+            targetEntity: AppBundle\Entity\Game
+            inversedBy: rounds
+    oneToMany:
+        transactions:
+            targetEntity: AppBundle\Entity\Transaction
+            mappedBy: round
+    lifecycleCallbacks: {  }

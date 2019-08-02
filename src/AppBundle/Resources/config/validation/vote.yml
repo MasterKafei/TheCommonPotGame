@@ -1,0 +1,3 @@
+AppBundle\Entity\Vote:
+    constraints:
+        -   AppBundle\Validator\Entity\Vote: ~

@@ -1,0 +1,16 @@
+AppBundle\Entity\Vote:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\VoteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        owner:
+            targetEntity: AppBundle\Entity\Player
+        target:
+            targetEntity: AppBundle\Entity\Player
+    lifecycleCallbacks: {  }

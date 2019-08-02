@@ -35,6 +35,14 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    paths:
+        '%kernel.project_dir%/src/AppBundle/Resources/views/Page': Page
+        '%kernel.project_dir%/src/AppBundle/Resources/views/Layout': Layout
+    form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+        game_bussiness: '@AppBundle\Service\Business\GameBusiness'
+        round_bussiness: '@AppBundle\Service\Business\RoundBusiness'
+        transaction_bussiness: '@AppBundle\Service\Business\TransactionBusiness'
 
 # Doctrine Configuration
 doctrine:

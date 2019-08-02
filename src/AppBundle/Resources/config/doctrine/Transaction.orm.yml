@@ -1,0 +1,22 @@
+AppBundle\Entity\Transaction:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\TransactionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        taxes:
+            type: integer
+        piggyBank:
+            type: integer
+    manyToOne:
+        round:
+            targetEntity: AppBundle\Entity\Round
+            mappedBy: transactions
+        player:
+            targetEntity: AppBundle\Entity\Player
+    lifecycleCallbacks: {  }

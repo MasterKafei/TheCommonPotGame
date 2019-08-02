@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>{% block title %}{% endblock title %}</title>
+    {% include '@Layout/Page/Default/stylesheets.html.twig' %}
+    {% block stylesheets %}{% endblock stylesheets %}
+</head>
+<body>
+{% include '@Layout/Navbar/Default/base.html.twig' %}
+<div class="container-fluid">
+    {% block body %}
+    {% endblock body %}
+</div>
+{% block scripts %}{% endblock scripts %}
+</body>
+</html>

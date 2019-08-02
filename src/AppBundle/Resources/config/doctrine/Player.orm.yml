@@ -1,0 +1,20 @@
+AppBundle\Entity\Player:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\PlayerRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToOne:
+        vote:
+            targetEntity: AppBundle\Entity\Vote
+    manyToOne:
+        user:
+            targetEntity: AppBundle\Entity\User
+        game:
+            targetEntity: AppBundle\Entity\Game
+            inversedBy: players
+    lifecycleCallbacks: {  }

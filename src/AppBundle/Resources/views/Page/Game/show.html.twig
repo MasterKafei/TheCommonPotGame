@@ -1,0 +1,85 @@
+{% extends '@Layout/Page/Default/base.html.twig' %}
+
+{% block body %}
+    {% if game.finished %}
+        {% set players = game.players|sort('money') %}
+    {% else %}
+        {% set players = game.players %}
+    {% endif %}
+    Votre compte personnel: {{ transaction_bussiness.playerMoney(player) }}€<br/>
+    Tour: {{ round_bussiness.currentRound(game).number }}/{{ game.roundNumber }}
+    {% set previous_round = round_bussiness.previousRound(game) %}<br/>
+    Taxes tour précédent: {{ previous_round ? round_bussiness.roundTaxes(previous_round) ~ '€' : '-' }}
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Joueur</th>
+            <th scope="col">Status</th>
+            {% if game.finished %}
+                <th scope="col">Solde</th>
+            {% endif %}
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for current_player in players %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ current_player.user.username }}</td>
+                <td>
+                    {{ game.eliminatedPlayer == current_player ? 'Eliminé' : 'En jeu' }}
+                </td>
+                {% if game.finished %}
+                    <td>
+                        {{ transaction_bussiness.playerMoney(current_player) }}€
+                    </td>
+                {% endif %}
+                <td>
+                    {% if current_player.user != app.user and player.vote == null and not game.finished %}
+                        <a href="{{ path('app_game_vote', {'name': game.name, 'id': current_player.id}) }}"
+                           class="btn btn-primary">
+                            Voter contre ce joueur
+                        </a>
+                    {% elseif player.vote is not null and player.vote.target == current_player %}
+                        Vous avez voté contre ce joueur
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if player != game.eliminatedPlayer and not game.finished %}
+        Tour suivant:
+        {{ form_start(form) }}
+        {{ form_rest(form) }}
+        <input type="submit" class="btn btn-primary" value="Payer">
+        {{ form_end(form) }}
+    {% endif %}
+    {% if game.finished %}
+        Historique:
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Tour</th>
+                <th>Joueur</th>
+                <th>Tirelire</th>
+                <th>Taxes</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for round in game.rounds %}
+                {% for transaction in round.transactions %}
+                    <tr>
+                        <td>{{ round.number }}</td>
+                        <td>{{ transaction.player.user.username }}</td>
+                        <td>{{ transaction.piggyBank }}</td>
+                        <td>{{ transaction.taxes }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock body %}

@@ -1,0 +1,8 @@
+{% extends '@Layout/Page/Default/base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_rest(form) }}
+    <input type="submit" value="Se connecter" class="btn btn-primary">
+    {{ form_end(form) }}
+{% endblock body %}
