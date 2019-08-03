@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if app.user is not null %}
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12">
                 {% include '@Layout/Widget/Game/Creation/base.html.twig' with {'form': form} %}
             </div>
@@ -12,7 +12,7 @@
     {% set not_started_games %}
         {% for game in games if not game.finished and game.rounds|length < 2 %}
             {% set has_not_started_games = true %}
-            <div class="col-4 mt-4">
+            <div class="col-lg-6 col-md-12 col-sm-12">
                 {% include '@Layout/Widget/Game/Default/base.html.twig' with {'game': game} %}
             </div>
         {% endfor %}
@@ -20,7 +20,7 @@
 
 
     {% if has_not_started_games %}
-        <div class="row">
+        <div class="row mt-4">
             {{ not_started_games }}
         </div>
     {% endif %}
@@ -29,7 +29,7 @@
     {% set started_games %}
         {% for game in games if not game.finished and game.rounds|length > 2 %}
             {% set started_games = true %}
-            <div class="col-3">
+            <div class="col-lg-6 col-md-12 col-sm-12">
                 {% include '@Layout/Widget/Game/Default/base.html.twig' with {'game': game} %}
             </div>
         {% endfor %}
@@ -45,7 +45,7 @@
     {% set finished_games %}
         {% for game in games if game.finished %}
             {% set has_finished_games = true %}
-            <div class="col-3">
+            <div class="col-lg-6 col-md-12 col-sm-12">
                 {% include '@Layout/Widget/Game/Default/base.html.twig' with {'game': game} %}
             </div>
         {% endfor %}

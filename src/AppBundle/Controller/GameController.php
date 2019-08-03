@@ -93,6 +93,11 @@ class GameController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         foreach ($game->getPlayers() as $player) {
+
+            if (null !== $player->getVote()) {
+                $em->remove($player->getVote());
+                $em->flush();
+            }
             $em->remove($player);
         }
         foreach ($game->getRounds() as $round) {
@@ -133,8 +138,7 @@ class GameController extends Controller
         $game
             ->setRoundMoney(5)
             ->setRoundNumber(5)
-            ->setMaxPlayerNumber(5)
-        ;
+            ->setMaxPlayerNumber(5);
 
         return $this->render('@Page/Game/list.html.twig', array(
             'games' => $games,
